@@ -95,16 +95,20 @@ async function loadPortfolio(username) {
 
   try {
     const encodedUsername = encodeURIComponent(normalizedUsername);
-    const [user, repos] = await Promise.all([
-      fetchJSON(`/users/${encodedUsername}`),
-      fetchJSON(`/users/${encodedUsername}/repos?sort=updated&per_page=100`),
-    ]);
-
-    allRepos = repos.filter((repo) => !repo.fork);
+    const user = await fetchJSON(`/users/${encodedUsername}`);
     renderProfile(user);
     document.querySelector('#repo-search').value = '';
+    allRepos = [];
     renderRepos(allRepos);
     showSection('content');
+
+    try {
+      const repos = await fetchJSON(`/users/${encodedUsername}/repos?sort=updated&per_page=100`);
+      allRepos = repos.filter((repo) => !repo.fork);
+      renderRepos(allRepos);
+    } catch (error) {
+      document.querySelector('#repo-empty').textContent = 'Unable to load repositories from GitHub.';
+    }
   } catch (error) {
     document.querySelector('#error-message').textContent = getErrorMessage(error, normalizedUsername);
     showSection('state-error');
