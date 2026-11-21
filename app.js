@@ -2,16 +2,12 @@
    Fetch × GitHub Workshop — portfolio application
    ================================================================== */
 
-const USERNAME = 'zakariabensaid-360';
-const USE_MOCK = false; // Set to true to use the files in ./mock/.
+const USERNAME = 'chrdalachraf85-blip';
 
 let allRepos = [];
 let currentUser = USERNAME;
 
 function getUrl(path) {
-  if (USE_MOCK) {
-    return path.endsWith('/repos') ? './mock/repos.json' : './mock/user.json';
-  }
   return `https://api.github.com${path}`;
 }
 
@@ -26,7 +22,11 @@ function renderProfile(user) {
   const name = user.name || login;
   const avatar = document.querySelector('#avatar');
 
-  avatar.src = user.avatar_url || './mock/avatar.svg';
+  if (user.avatar_url) {
+    avatar.src = user.avatar_url;
+  } else {
+    avatar.removeAttribute('src');
+  }
   avatar.alt = `Photo de profil de ${name}`;
   document.querySelector('#name').textContent = name;
   document.querySelector('#login').textContent = `@${login}`;
