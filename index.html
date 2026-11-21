@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio GitHub</title>
+
+  <!-- Polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  
+  <!-- Tailwind CSS (version figée) -->
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#0A0E1A',     // fond de page
+            surface: '#111729', // cartes
+            raised: '#172038',  // survol
+            line: '#222C48',    // bordures
+            fg: '#E8EBF4',      // texte principal
+            muted: '#8C96B5',   // texte secondaire
+            star: '#F5B83D',    // accent
+          },
+          fontFamily: {
+            display: ['"Bricolage Grotesque"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    [hidden] { display: none !important; }
+  </style>
+
+  <!-- Notre JavaScript : "defer" = exécuté après la lecture du HTML -->
+  <script src="app.js" defer></script>
+</head>
+
+<body class="min-h-screen bg-ink font-sans text-fg antialiased">
+
+  <!-- ============ EN-TÊTE + RECHERCHE (étape 5) ============ -->
+  <header class="sticky top-0 z-30 border-b border-line/70 bg-ink/80 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-6">
+      <a href="#profil" class="flex shrink-0 items-center gap-2 font-mono text-sm text-muted hover:text-fg">
+        <span class="text-star">~/</span><span id="nav-login" class="text-fg">pseudo</span>
+      </a>
+
+      <nav class="ml-4 hidden items-center gap-6 text-sm text-muted md:flex">
+        <a href="#profil" class="hover:text-fg">Profil</a>
+        <a href="#projets" class="hover:text-fg">Projets</a>
+      </nav>
+
+      <form id="search-form" class="ml-auto flex w-full max-w-xs items-center gap-2" role="search">
+        <label for="search-input" class="sr-only">Pseudo GitHub</label>
+        <input id="search-input" type="text" autocomplete="off" spellcheck="false" placeholder="@pseudo GitHub"
+               class="w-full flex-1 rounded-lg border border-line bg-surface px-3 py-2 font-mono text-sm text-fg placeholder:text-muted/70 focus:border-star/60 focus:outline-none focus:ring-2 focus:ring-star/30">
+        <button type="submit" class="rounded-lg bg-star px-3 py-2 text-sm font-semibold text-ink hover:bg-star/90">
+          Explorer
+        </button>
+      </form>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+
+    <!-- ============ ÉTAT : CHARGEMENT (étape 4) ============ -->
+    <section id="state-loading" hidden class="animate-pulse pt-14" aria-live="polite">
+      <span class="sr-only">Chargement…</span>
+      <div class="flex flex-col gap-8 md:flex-row md:items-center">
+        <div class="h-36 w-36 shrink-0 rounded-3xl bg-surface"></div>
+        <div class="flex-1 space-y-4">
+          <div class="h-10 w-72 max-w-full rounded bg-surface"></div>
+          <div class="h-4 w-full max-w-lg rounded bg-surface"></div>
+        </div>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="h-40 rounded-2xl bg-surface"></div>
+        <div class="h-40 rounded-2xl bg-surface"></div>
+        <div class="h-40 rounded-2xl bg-surface"></div>
+      </div>
+    </section>
+
+    <!-- ============ ÉTAT : ERREUR (étape 4) ============ -->
+    <section id="state-error" hidden role="alert" class="pt-14">
+      <div class="mx-auto max-w-lg rounded-2xl border border-red-400/30 bg-red-500/5 p-8 text-center">
+        <h2 class="font-display text-2xl font-bold">Impossible de charger le profil</h2>
+        <p id="error-message" class="mt-2 text-muted">Message d'erreur.</p>
+        <button id="retry-btn" type="button" class="mt-6 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium hover:bg-raised">
+          Réessayer
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ CONTENU DU PORTFOLIO ============ -->
+    <div id="content">
+
+      <!-- ---------- PROFIL (étape 2) ---------- -->
+      <section id="profil" class="scroll-mt-24 pt-14">
+        <div class="flex flex-col gap-8 md:flex-row md:items-center">
+          <img id="avatar" src="mock/avatar.svg" alt="Photo de profil" width="144" height="144"
+               class="h-36 w-36 shrink-0 rounded-3xl border border-line bg-surface object-cover ring-4 ring-star/20 ring-offset-4 ring-offset-ink">
+
+          <div class="min-w-0 flex-1">
+            <p class="font-mono text-xs uppercase tracking-[0.18em] text-star">Portfolio · données GitHub</p>
+            <h1 id="name" class="mt-2 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">Prénom Nom</h1>
+            <p id="login" class="mt-1 font-mono text-sm text-muted">@pseudo</p>
+            <p id="bio" class="mt-4 max-w-2xl text-lg leading-relaxed text-fg/90">La bio du profil s'affichera ici.</p>
+
+            <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+              <li>📍 <span id="location">Nador, Morocco</span></li>
+              <li>📅 <span id="joined">Sur GitHub depuis 2020</span></li>
+            </ul>
+
+            <a id="github-link" href="https://github.com" target="_blank" rel="noopener"
+               class="mt-7 inline-flex rounded-lg bg-star px-4 py-2.5 text-sm font-semibold text-ink hover:bg-star/90">
+              Voir sur GitHub ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Statistiques -->
+        <dl class="mt-12 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-line bg-line">
+          <div class="bg-surface p-5">
+            <dt class="text-xs uppercase tracking-wider text-muted">Dépôts</dt>
+            <dd id="stat-repos" class="mt-2 font-mono text-3xl tabular-nums">0</dd>
+          </div>
+          <div class="bg-surface p-5">
+            <dt class="text-xs uppercase tracking-wider text-muted">Abonnés</dt>
+            <dd id="stat-followers" class="mt-2 font-mono text-3xl tabular-nums">0</dd>
+          </div>
+          <div class="bg-surface p-5">
+            <dt class="text-xs uppercase tracking-wider text-muted">Abonnements</dt>
+            <dd id="stat-following" class="mt-2 font-mono text-3xl tabular-nums">0</dd>
+          </div>
+        </dl>
+      </section>
+      <!-- ---------- PROJETS (étapes 3 et 6) ---------- -->
+      <section id="projets" class="scroll-mt-24 pt-16">
+        <div class="flex flex-wrap items-baseline justify-between gap-4">
+          <h2 class="font-display text-2xl font-bold tracking-tight">Projets</h2>
+          <p id="repo-count" class="font-mono text-sm text-muted">0 dépôt(s)</p>
+        </div>
+
+        <!-- Filtre (étape 6) -->
+        <label for="repo-search" class="sr-only">Rechercher un projet</label>
+        <input id="repo-search" type="search" placeholder="Rechercher un projet…"
+               class="mt-5 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg placeholder:text-muted/70 focus:border-star/60 focus:outline-none focus:ring-2 focus:ring-star/30">
+
+        <!-- Les cartes sont ajoutées ici par JavaScript -->
+        <div id="repo-grid" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+        <p id="repo-empty" hidden class="mt-6 rounded-2xl border border-dashed border-line p-10 text-center text-muted">
+          Aucun projet ne correspond à votre recherche.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="border-t border-line/70">
+    <p class="mx-auto max-w-6xl px-4 py-6 text-xs text-muted sm:px-6">
+      Données fournies par l'<a href="https://docs.github.com/fr/rest" target="_blank" rel="noopener" class="underline underline-offset-4 hover:text-fg">API REST GitHub</a>.
+    </p>
+  </footer>
+
+  <!-- ============ TEMPLATE : carte de projet (étape 3) ============
+       Le contenu d'un <template> n'est pas affiché : on le copie en JavaScript. -->
+  <template id="repo-template">
+    <article class="group relative flex flex-col rounded-2xl border border-line bg-surface p-5 transition hover:-translate-y-0.5 hover:border-star/40 hover:bg-raised">
+      <div class="flex items-start justify-between gap-3">
+        <a class="repo-name min-w-0 break-words font-mono text-[15px] font-medium after:absolute after:inset-0 group-hover:text-star"
+           href="#" target="_blank" rel="noopener">nom-du-depot</a>
+        <span class="shrink-0 font-mono text-xs text-muted">⭐ <span class="repo-stars">0</span></span>
+      </div>
+
+      <p class="repo-description mt-2 line-clamp-3 text-sm leading-relaxed text-muted">Description du dépôt.</p>
+
+      <div class="mt-auto flex flex-wrap gap-x-4 gap-y-2 pt-5 text-xs text-muted">
+        <span class="repo-language text-fg">Langage</span>
+        <span>Forks : <span class="repo-forks">0</span></span>
+        <span class="repo-updated">Mis à jour le 01/01/2026</span>
+      </div>
+    </article>
+  </template>
+</body>
+</html>

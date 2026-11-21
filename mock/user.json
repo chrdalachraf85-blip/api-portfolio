@@ -1,0 +1,21 @@
+{
+  "login": "ines-moreau",
+  "id": 10000001,
+  "avatar_url": "./mock/avatar.svg",
+  "html_url": "https://github.com/",
+  "type": "User",
+  "name": "Inès Moreau",
+  "company": "École du Numérique",
+  "blog": "ines-moreau.dev",
+  "location": "Lyon, France",
+  "email": null,
+  "hireable": true,
+  "bio": "Développeuse web full-stack. J'aime les interfaces rapides, les API bien documentées et le café filtre.",
+  "twitter_username": null,
+  "public_repos": 9,
+  "public_gists": 2,
+  "followers": 96,
+  "following": 41,
+  "created_at": "2021-03-14T09:12:44Z",
+  "updated_at": "2026-10-28T17:40:02Z"
+}
