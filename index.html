@@ -8,7 +8,7 @@
   <!-- Polices -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
   
   <!-- Tailwind CSS (version figée) -->
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
@@ -17,16 +17,16 @@
       theme: {
         extend: {
           colors: {
-            ink: '#0A0E1A',     // fond de page
-            surface: '#111729', // cartes
-            raised: '#172038',  // survol
-            line: '#222C48',    // bordures
-            fg: '#E8EBF4',      // texte principal
-            muted: '#8C96B5',   // texte secondaire
-            star: '#F5B83D',    // accent
+            ink: '#001820',     // fond de page
+            surface: '#052330', // cartes
+            raised: '#082D3B',  // survol
+            line: '#153B48',    // bordures
+            fg: '#F1F0E8',      // texte principal
+            muted: '#A0AFB3',   // texte secondaire
+            star: '#FF3D08',    // accent
           },
           fontFamily: {
-            display: ['"Bricolage Grotesque"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['Anton', 'Impact', 'sans-serif'],
             sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
           },
@@ -37,6 +37,71 @@
   <style>
     html { scroll-behavior: smooth; }
     [hidden] { display: none !important; }
+
+    body { background: #001820; }
+    header { border-color: #153b48; background: rgba(0, 24, 32, .92); }
+    #profil { padding-top: 4.5rem; }
+    #avatar {
+      width: 220px;
+      height: 220px;
+      border: 0;
+      border-radius: 32px;
+      background: #052330;
+      object-fit: cover;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .2);
+    }
+    #name {
+      margin-top: .5rem;
+      font-size: clamp(5.5rem, 12vw, 9rem);
+      line-height: .88;
+      letter-spacing: -.035em;
+      text-transform: uppercase;
+    }
+    #bio { max-width: 42rem; }
+    .profile-stats { border-color: #153b48; background: #153b48; }
+    .profile-stats > div { min-height: 145px; background: #052330; padding: 1.5rem 2rem; }
+    .profile-stats dt { font-family: 'JetBrains Mono', monospace; letter-spacing: .18em; }
+    .profile-stats dd { margin-top: .25rem; font-size: 3.75rem; line-height: 1; }
+    #projets { padding-top: 5rem; }
+    #projets h2 { font-size: clamp(3.2rem, 6vw, 4.5rem); line-height: 1; text-transform: uppercase; }
+    #search-input, #repo-search {
+      min-height: 54px;
+      border-color: #153b48;
+      border-radius: 12px;
+      background: #052330;
+    }
+    #search-input:focus, #repo-search:focus { border-color: #ff3d08; }
+    #search-form button, #github-link {
+      border-radius: 12px;
+      background: #ff3d08;
+      color: #001820;
+    }
+    #search-form button:hover, #github-link:hover { background: #ff5426; }
+    #repo-grid article {
+      min-height: 190px;
+      border-color: #153b48;
+      border-radius: 16px;
+      background: #052330;
+      padding: 1.5rem;
+    }
+    #repo-grid article:hover { border-color: #ff3d08; background: #082d3b; }
+    #repo-grid .repo-name { font-weight: 600; }
+    #repo-grid .repo-stars { color: #ff3d08; }
+    #repo-grid .repo-language {
+      border-radius: 999px;
+      background: #ff3d08;
+      color: #001820;
+      padding: .2rem .65rem;
+      font-weight: 600;
+    }
+    footer { border-color: #153b48; }
+
+    @media (max-width: 640px) {
+      #profil { padding-top: 2.5rem; }
+      #avatar { width: 150px; height: 150px; border-radius: 24px; }
+      .profile-stats > div { min-height: 110px; padding: 1rem; }
+      .profile-stats dd { font-size: 2.5rem; }
+    }
   </style>
 
   <!-- Notre JavaScript : "defer" = exécuté après la lecture du HTML -->
@@ -103,9 +168,8 @@
 
       <!-- ---------- PROFIL (étape 2) ---------- -->
       <section id="profil" class="scroll-mt-24 pt-14">
-        <div class="flex flex-col gap-8 md:flex-row md:items-center">
-          <img id="avatar" alt="Photo de profil" width="144" height="144"
-               class="h-36 w-36 shrink-0 rounded-3xl border border-line bg-surface object-cover ring-4 ring-star/20 ring-offset-4 ring-offset-ink">
+        <div class="flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
+          <img id="avatar" alt="Photo de profil" width="220" height="220" class="shrink-0">
 
           <div class="min-w-0 flex-1">
             <p class="font-mono text-xs uppercase tracking-[0.18em] text-star">Portfolio · données GitHub</p>
@@ -126,7 +190,7 @@
         </div>
 
         <!-- Statistiques -->
-        <dl class="mt-12 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-line bg-line">
+        <dl class="profile-stats mt-12 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border">
           <div class="bg-surface p-5">
             <dt class="text-xs uppercase tracking-wider text-muted">Dépôts</dt>
             <dd id="stat-repos" class="mt-2 font-mono text-3xl tabular-nums">0</dd>
